@@ -1,0 +1,61 @@
+{# Это шаблон templates/base.html #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Default Title{% endblock %}</title>
+    <style type="text/css">
+ul {
+  list-style: none; /*убираем маркеры списка*/
+  margin: 0; /*убираем отступы*/
+  padding-left: 0; /*убираем отступы*/
+  margin-top:0px; /*делаем отступ сверху*/
+  background:#4682B4; /*добавляем фон всему меню (заменив этот параметр, вы поменяете цвет всего меню)*/
+  height: 50px; /*задаем высоту*/
+}
+a {
+  text-decoration: none; /*убираем подчеркивание текста ссылок*/
+  background:#4682B4; /*добавляем фон к пункту меню (заменив этот параметр, вы поменяете цвет всех пунктов меню)*/
+  color:#fff; /*меняем цвет ссылок*/
+  padding:0px 15px; /*добавляем отступ*/
+  font-family: arial; /*меняем шрифт*/
+  line-height:50px; /*ровняем меню по вертикали*/
+  display: block; 
+  border-right: 1px solid #4682B4; /*добавляем бордюр справа*/
+  -moz-transition: all 0.3s 0.01s ease; /*делаем плавный переход*/
+  -o-transition: all 0.3s 0.01s ease;
+  -webkit-transition: all 0.3s 0.01s ease;
+}
+a:hover {
+  background:#D43737;/*добавляем эффект при наведении*/
+}
+li {
+  float:left; /*Размещаем список горизонтально для реализации меню*/
+}
+.divClass { 
+text-align: center;
+	border: 1px solid #000000;
+    background: #FFF; /* Цвет фона */
+    padding: 50px 5%; /* Поля */
+    margin: 10% 15% 5%;   
+}
+	</style>
+</head>
+<body>
+
+    <nav class="two">
+  	<ul>
+    	<li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    	<li><a href="#">Work</a></li>
+    	{% block nav %}
+    	{% endblock %}
+  	</ul>
+	</nav>
+    <div class = "divClass">
+    
+    {% block content %}
+    
+    {% endblock %}
+   </div>
+</body>
+</html>
