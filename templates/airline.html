@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Check
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <label>With</label>
+        <input type="text" name="with" required/>
+        <label>to</label>
+        <input type="password" name="to" required/><br>
+        <input type="submit" name="cmd" value="Вход"/>
+    </form>
+    {% if checks %}
+    
+    {% endif %}
+    
+    {% for i in range(4) %}
+    <p> {{i}}</p>
+    {% endfor%}
+{% endblock %}

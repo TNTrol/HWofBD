@@ -45,10 +45,20 @@ text-align: center;
 
     <nav class="two">
   	<ul>
-    	<li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
-    	<li><a href="#">Work</a></li>
+  	{% if current_user and current_user.is_authenticated %}
+  		<li><a href="/">{{ current_user.username }}</a></li>
+  	{% else %}
+  		<li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+  	{% endif %}
+    	    	
     	{% block nav %}
     	{% endblock %}
+    	
+    	{% if current_user and current_user.is_authenticated %}
+    		<li><a href="/logout">Exit</a></li>
+    	{% else %}
+    		<li><a href="/login">Login</a></li>
+    	{% endif %}
   	</ul>
 	</nav>
     <div class = "divClass">
