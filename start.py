@@ -36,7 +36,6 @@ def select_from(name):
 
 @login_manager.user_loader
 def load_user(user_id):
-	#cursor.execute('SELECT * FROM USERS WHERE ID_USER = %(var)s', {'var':user_id,})
 	cursor.execute('SELECT * FROM USERS WHERE ID_USER = ? ;', (int(user_id),))
 	res = cursor.fetchone()
 	user = MyUser(res[1], res[2], res[0])
