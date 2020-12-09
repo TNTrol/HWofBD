@@ -77,6 +77,9 @@ def service(index):
 @app.route('/check', methods=["GET", "POST"])
 @login_required
 def generate_airline():
+	if request.method == 'POST':
+		login = request.form['with']
+		print(login)
 	return render_template('airline.html')
 
 @app.route('/add', methods=["GET", "POST"])
