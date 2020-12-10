@@ -55,6 +55,11 @@ text-align: center;
     	{% endblock %}
     	
     	{% if current_user and current_user.is_authenticated %}
+            {% if current_user.role == 1 %}
+                <li><a href="/add">Add new act</a></li>
+            {% elif current_user.role == 2 %}
+                <li><a href="/check">Show my check</a></li>
+            {% endif %}
     		<li><a href="/logout">Exit</a></li>
     	{% else %}
     		<li><a href="/login">Login</a></li>

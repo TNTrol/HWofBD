@@ -1,10 +1,11 @@
 class MyUser():
 	username = 'TNT'
 	
-	def __init__(self, name, role, id):
+	def __init__(self, name, role, id, private_id = 4):
 		self.username = name
 		self.role = role
 		self.id = id
+		self.private_id = private_id
 
 	def is_authenticated(self):
 		return True

@@ -77,14 +77,30 @@ def service(index):
 @app.route('/check', methods=["GET", "POST"])
 @login_required
 def generate_airline():
+	if current_user.role != 2:
+		return redirect(url_for('base'))
+	data_acts = None
+	count_acts = None
+	data_earth = None
+	data_tex = None
 	if request.method == 'POST':
-		login = request.form['with']
-		print(login)
-	return render_template('airline.html')
+		with_date = request.form['with']
+		to_date = request.form['to']
+		cursor.execute('SELECT LIST_SERVICE.ID_ACT, TARIFF.ID_SERVICE, LIST_SERVICE.TYPE_SERVICE, TARIFF.COST FROM LIST_SERVICE JOIN TARIFF JOIN LANDING_ACT ON TARIFF.TYPE_SERVICE = LIST_SERVICE.TYPE_SERVICE AND TARIFF.ID_SERVICE = LIST_SERVICE.ID_SERVICE AND LIST_SERVICE.ID_ACT = LANDING_ACT.ID_ACT AND mydb.TARIFF.ID_AIRCRAFT = LANDING_ACT.TYPE_AIRCRAFT AND LANDING_ACT.ID_AIRLINE = ? AND LANDING_ACT.DATE > ? AND LANDING_ACT.DATE < ? ORDER BY LIST_SERVICE.ID_ACT;', (current_user.private_id, with_date, to_date))
+		data_acts = cursor.fetchall()
+		cursor.execute('SELECT COUNT(LIST_SERVICE.ID_ACT) , LIST_SERVICE.ID_ACT, LANDING_ACT.DATE FROM LIST_SERVICE JOIN LANDING_ACT WHERE LANDING_ACT.ID_ACT = LIST_SERVICE.ID_ACT AND LANDING_ACT.ID_AIRLINE = ? AND LANDING_ACT.DATE > ? AND LANDING_ACT.DATE < ? GROUP BY LIST_SERVICE.ID_ACT ORDER BY LIST_SERVICE.ID_ACT DESC;', (current_user.private_id, with_date, to_date))
+		count_acts = cursor.fetchall()
+		cursor.execute('SELECT NAME_SERVICE FROM TECH_SERVICE;')
+		data_tex = cursor.fetchall()
+		cursor.execute('SELECT NAME_SERVICE FROM EARTH_SERVICE;')
+		data_earth = cursor.fetchall()
+	return render_template('airline.html', count_acts = count_acts, data_acts = data_acts, data_tex = data_tex, data_earth = data_earth)
 
 @app.route('/add', methods=["GET", "POST"])
 @login_required
 def index():
+	if current_user.role != 1:
+		return redirect(url_for('base'))
 	if request.method == 'POST':
 		data = my_json.loads(request.form['data'])
 		airl = data['airline']
@@ -118,10 +134,10 @@ def index():
 
 if __name__ == "__main__":
 	try:
-		db , cursor = recover_connection('mydb', 'tntrol', 'dfkjd', True)
+		db , cursor = recover_connection('mydb', 'tntrol', 'password', True)
 		#cursor.execute('SELECT MAX(ID_ACT) FROM LANDING_ACT')
 		#id_act = cursor.fetchall()
-		id_act = 130 #int(id_act[0][0]) + 1
+		id_act = 110 #int(id_act[0][0]) + 1
 		app.run(debug = True)
 	except:
 		print('you lose')

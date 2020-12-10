@@ -6,34 +6,35 @@ Check
 
 {% block content %}
     <form method="post">
-        <label>With</label>
-        <input type="datetime-local" name="with" required/>
-        <label>to</label>
-        <input type="date" name="to" required/><br>
-        <input type="submit" name="cmd" value="Вход"/>
+        <label> С </label>
+        <input type="date" name="with" required/>
+        <label> По </label>
+        <input type="date" name="to" required/><br><p></p><br>
+        <input type="submit" name="cmd" value="Вывести"/>
     </form>
     {% if checks %}
     
     {% endif %}
     
-    {% if count_acts %}
-    	{% for act in len(count_acts) %}
+    {% if count_acts  %}
+    	{% for act in count_acts %}
     		<p> Акт № {{ act[1] }} </p>
     		<p> Дата офорления {{ act[2] }} </p>
     		<table>
-    		{% for i in range(count_acts[act[0]]) %}
+    		{% for i in range(act[0]) %}
     			<tr>
     				<td>
     					{% if data_acts[-1][2] %}
-    						<p> {{ data_tex[data_acts[-1][1]] }} </p>
+    						<p> {{ data_tex[data_acts[-1][1] - 1][0]  }} </p>
     					{% else %}
-    						<p> {{ data_earth[data_acts[-1][1] - 1] }} </p>
+    						<p> {{ data_earth[data_acts[-1][1] - 1][0] }} </p>
     					{% endif %}
     				</td>
     				<td>
     					<p> {{data_acts[-1][3]}}</p>
     				</td>
-    				{{data_acts.pop()}}
+                    {% if data_acts.pop() %} 
+                    {% endif %}
     			</tr>
     		{% endfor %}
     		</table>
