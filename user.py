@@ -1,7 +1,7 @@
 class MyUser():
 	username = 'TNT'
 	
-	def __init__(self, name, role, id, private_id = 4):
+	def __init__(self, name, role, id, private_id):
 		self.username = name
 		self.role = role
 		self.id = id

@@ -38,7 +38,8 @@ def select_from(name):
 def load_user(user_id):
 	cursor.execute('SELECT * FROM USERS WHERE ID_USER = ? ;', (int(user_id),))
 	res = cursor.fetchone()
-	user = MyUser(res[1], res[2], res[0])
+	print(res[4])
+	user = MyUser(res[1], res[3], res[0], res[4])
 	return user
 
 @app.route('/login', methods=["GET", "POST"])
@@ -50,11 +51,13 @@ def login():
 	login = request.form['login']
 	password = request.form['password']
 	global cursor
-	cursor.execute('SELECT * FROM USERS WHERE USER_NAME = ? AND PASSWORD = ? ;', (login, password))
+	cursor.execute('SELECT * FROM USERS WHERE LOGIN = ? AND PASSWORD = ? ;', (login, password))
+	
 	user_sql = cursor.fetchone()
+	print(user_sql)
 	if user_sql is None :
 		return render_template('login.html')
-	user = MyUser(user_sql[1], user_sql[2], user_sql[0])
+	user = MyUser(user_sql[1], user_sql[3], user_sql[0], user_sql[4])
 	login_user( user)
 	return redirect(url_for('base'))
 
@@ -83,6 +86,7 @@ def generate_airline():
 	count_acts = None
 	data_earth = None
 	data_tex = None
+	final_score = None
 	if request.method == 'POST':
 		with_date = request.form['with']
 		to_date = request.form['to']
@@ -94,7 +98,9 @@ def generate_airline():
 		data_tex = cursor.fetchall()
 		cursor.execute('SELECT NAME_SERVICE FROM EARTH_SERVICE;')
 		data_earth = cursor.fetchall()
-	return render_template('airline.html', count_acts = count_acts, data_acts = data_acts, data_tex = data_tex, data_earth = data_earth)
+		cursor.execute('SELECT SCORE FROM SCORE JOIN LANDING_ACT ON SCORE.ID_ACT = LANDING_ACT.ID_ACT AND LANDING_ACT.ID_AIRLINE = ? AND LANDING_ACT.DATE > ? AND LANDING_ACT.DATE < ? ',(current_user.private_id, with_date, to_date))
+		final_score = cursor.fetchall();
+	return render_template('airline.html', count_acts = count_acts, data_acts = data_acts, data_tex = data_tex, data_earth = data_earth, final_score = final_score)
 
 @app.route('/add', methods=["GET", "POST"])
 @login_required
@@ -106,7 +112,7 @@ def index():
 		airl = data['airline']
 		airc = data['aircraft']
 		print(data)
-		dis = data['dispatcher']
+		dis = current_user.private_id #data['dispatcher']
 		arr_types = data['types']
 		arr_service = data['services']
 		try:
@@ -135,9 +141,9 @@ def index():
 if __name__ == "__main__":
 	try:
 		db , cursor = recover_connection('mydb', 'tntrol', 'password', True)
-		#cursor.execute('SELECT MAX(ID_ACT) FROM LANDING_ACT')
-		#id_act = cursor.fetchall()
-		id_act = 110 #int(id_act[0][0]) + 1
+		cursor.execute('SELECT MAX(ID_ACT) FROM LANDING_ACT')
+		id_act = cursor.fetchall()
+		id_act = int(id_act[0][0]) + 1
 		app.run(debug = True)
 	except:
 		print('you lose')

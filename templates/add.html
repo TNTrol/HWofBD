@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Add
+    Добавление акта
 {% endblock %}
 
 {% block content %}
 
 
 <div class = "main">
-   <p><select id = "dispatcher">
+<!--   <p><select id = "dispatcher">
    {% for des in despatcher %}
     <option  value= {{ des[0] }}>{{des[1]}} {{des[2]}} </option>
    {% endfor %}
-   </select>
+   </select> -->
 
    <select id = "aircraft">
    {% for air in aircraft %}
@@ -117,7 +117,7 @@ Add
 	
 	function handler_send_data()
 	{
-		var dispather = document.getElementById('dispatcher').value;
+		//var dispather = document.getElementById('dispatcher').value;
 		var aircraft = document.getElementById('aircraft').value;
 		var airline = document.getElementById('airline').value;
 		var service_list = document.getElementsByClassName('service');
@@ -129,7 +129,7 @@ Add
 			arr_type.push(type_list[i].value);			
 		}
 		let my_data = {
-			dispatcher: dispather,
+			//dispatcher: dispather,
 			aircraft: aircraft,
 			airline: airline,
 			types: arr_type,

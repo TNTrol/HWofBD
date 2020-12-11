@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Default Title{% endblock %}</title>
+    <title>{% block title %}Домашняя страница{% endblock %}</title>
     <style type="text/css">
 ul {
   list-style: none; /*убираем маркеры списка*/
@@ -48,7 +48,7 @@ text-align: center;
   	{% if current_user and current_user.is_authenticated %}
   		<li><a href="/">{{ current_user.username }}</a></li>
   	{% else %}
-  		<li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+  		<li><a href="/"><i class="fa fa-home fa-fw"></i>Домашня станица</a></li>
   	{% endif %}
     	    	
     	{% block nav %}
@@ -56,20 +56,20 @@ text-align: center;
     	
     	{% if current_user and current_user.is_authenticated %}
             {% if current_user.role == 1 %}
-                <li><a href="/add">Add new act</a></li>
+                <li><a href="/add">Добавить акт</a></li>
             {% elif current_user.role == 2 %}
-                <li><a href="/check">Show my check</a></li>
+                <li><a href="/check">Посмотреть чеки</a></li>
             {% endif %}
-    		<li><a href="/logout">Exit</a></li>
+    		<li><a href="/logout">Выход</a></li>
     	{% else %}
-    		<li><a href="/login">Login</a></li>
+    		<li><a href="/login">Вход</a></li>
     	{% endif %}
   	</ul>
 	</nav>
     <div class = "divClass">
     
     {% block content %}
-    
+        <p>Работа аэпорта </p>
     {% endblock %}
    </div>
 </body>

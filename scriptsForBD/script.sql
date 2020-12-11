@@ -1,7 +1,7 @@
 INSERT mydb.TECH_SERVICE (NAME_SERVICE ) VALUES("Проверка проводки"),("Проверка навигации"), ("Тех осмотр двигателей"),("Тех осмотр шасси"),("Тех осмотр закрылок"), ("Замена закрылок"), ("Ремонт шасси"), ("Ремонт генератора"), ("Полный ремонт двигателя");
 INSERT mydb.EARTH_SERVICE (NAME_SERVICE ) VALUES("Заправка"),("Замена покрышек"), ("Очистка салона"), ("Пополнение запасов еды"), ("Осмотр фезуляжа"), ("Замена масла"), ("Пополнение запасов воды"), ("Проверка работы аварийных систем"), ("Сан. услуги");
 INSERT mydb.DISPATCHER (SECOND_NAME, NAME ) VALUES("Иванов", "Сергей"),( "Беспалов", "Владимир"), ("Белашков", "Денис"), ("Петров", "Юрий"), ("Жмышенко", "Инокентий"), ("Нартов", "Евгений"), ("Зыков", "Георгий");
-INSERT mydb.USERS (USERS_NAME, ROLE, ID_DISPATCHER, PASSWORD ) VALUES("Иванов Сергей", 1, 1, "password" ),( "Беспалов Владимир", 1, 2, "password"), ("Белашков Денис", 1, 3, "password"), ("Петров Юрий", 1, 4, "password"), ("Жмышенко Инокентий", 1, 5, "password"), ("Нартов Евгений", 1, 6, "password"), ("Зыков Георгий", 1, 7, "password");
+--INSERT mydb.USERS (USERS_NAME, ROLE, ID_DISPATCHER, PASSWORD ) VALUES("Иванов Сергей", 1, 1, "password" ),( "Беспалов Владимир", 1, 2, "password"), ("Белашков Денис", 1, 3, "password"), ("Петров Юрий", 1, 4, "password"), ("Жмышенко Инокентий", 1, 5, "password"), ("Нартов Евгений", 1, 6, "password"), ("Зыков Георгий", 1, 7, "password");
 INSERT mydb.AIRCRAFT (NAME_AIRCRAFT) VALUES("Bing-777"),("Boing-767"), ("An-17"),("Airbus A220"), ("Tu-204");
 INSERT mydb.AIRLINE (NAME_AIRLINE) VALUES("AirFlot" ), ("British Airlines"), ("US Airlines"), ("Air France-KLM"), ("Emirates");
 INSERT mydb.RATE (`DATE`,EURO ) VALUES(CURRENT_DATE() - interval 2 day, 74.00),(CURRENT_DATE() - interval 1 day, 74.05), (CURRENT_DATE(),75.91);
@@ -12,7 +12,7 @@ INSERT mydb.TARIFF (ID_AIRCRAFT, TYPE_SERVICE, ID_SERVICE, COST) VALUES(1, true,
 INSERT mydb.SCORE (ID_SCORE, ID_ACT, SCORE) VALUES (1, 1, 50),(2,2,40),(3,3,60);
  commit;
  --
- --INSERT mydb.USERS (ID_USER, USERS_NAME, ROLE, ID_DISPATCHER, PASSWORD ) VALUES(10, "tntrol", 1, 1, "password" )
+ --INSERT mydb.USERS (USER_NAME, ROLE, ID_PRIVATE, PASSWORD, LOGIN ) VALUES( "airline2", 2, 4, "password", "airline2" );
  --
  SELECT * FROM mydb.LIST_SERVICE WHERE ID_ACT = 1;
  SELECT SUM(COST) FROM mydb.TARIFF WHERE ID_AIRCRAFT = 1 AND TYPE_SERVICE;
@@ -60,4 +60,8 @@ SELECT COUNT(LIST_SERVICE.ID_ACT) , LIST_SERVICE.ID_ACT, LANDING_ACT.DATE
 	AND LANDING_ACT.DATE > '2020-12-10' AND LANDING_ACT.DATE < '2020-12-12'
 	GROUP BY LIST_SERVICE.ID_ACT ORDER BY LIST_SERVICE.ID_ACT DESC;
 
-SELECT LIST_SERVICE.ID_ACT, TARIFF.ID_SERVICE, LIST_SERVICE.TYPE_SERVICE, TARIFF.COST FROM LIST_SERVICE JOIN TARIFF JOIN LANDING_ACT ON TARIFF.TYPE_SERVICE = LIST_SERVICE.TYPE_SERVICE AND TARIFF.ID_SERVICE = LIST_SERVICE.ID_SERVICE AND LIST_SERVICE.ID_ACT = LANDING_ACT.ID_ACT AND mydb.TARIFF.ID_AIRCRAFT = LANDING_ACT.TYPE_AIRCRAFT AND LANDING_ACT.ID_AIRLINE = 4 AND LANDING_ACT.DATE > '2020-12-10' AND LANDING_ACT.DATE < '2020-12-12' ORDER BY LIST_SERVICE.ID_ACT;
+SELECT LIST_SERVICE.ID_ACT, TARIFF.ID_SERVICE, LIST_SERVICE.TYPE_SERVICE, TARIFF.COST FROM LIST_SERVICE JOIN TARIFF JOIN LANDING_ACT ON TARIFF.TYPE_SERVICE = LIST_SERVICE.TYPE_SERVICE AND TARIFF.ID_SERVICE = LIST_SERVICE.ID_SERVICE AND LIST_SERVICE.ID_ACT = LANDING_ACT.ID_ACT AND mydb.TARIFF.ID_AIRCRAFT = LANDING_ACT.TYPE_AIRCRAFT AND LANDING_ACT.ID_AIRLINE = 1 AND LANDING_ACT.DATE > '2020-12-10' AND LANDING_ACT.DATE < '2020-12-12' ORDER BY LIST_SERVICE.ID_ACT;
+
+SELECT SCORE FROM SCORE
+    JOIN LANDING_ACT ON SCORE.ID_ACT = LANDING_ACT.ID_ACT AND LANDING_ACT.ID_AIRLINE = 4
+	AND LANDING_ACT.DATE > '2020-12-10' AND LANDING_ACT.DATE < '2020-12-12' ORDER BY LANDING_ACT.ID_ACT DESC;
