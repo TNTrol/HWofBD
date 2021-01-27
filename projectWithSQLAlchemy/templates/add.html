@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Добавление акта
+{% endblock %}
+
+{% block content %}
+
+<div class = "main">
+<!--   <p><select id = "dispatcher">
+   {% for des in despatcher %}
+    <option  value= {{ des[0] }}>{{des[1]}} {{des[2]}} </option>
+   {% endfor %}
+   </select> -->
+
+   <select id = "aircraft">
+   {% for air in aircraft %}
+    <option value= {{ air.ID_AIRCRAFT }}>{{air.NAME_AIRCRAFT}}</option>
+   {% endfor %}
+   </select>
+   
+   <select id = "airline">
+   {% for air in airline %}
+    <option value= {{ air.ID_AIRLINE }}>{{air.NAME_AIRLINE}}</option>
+   {% endfor %}
+   </select>
+   
+
+   </p>
+
+   <div class = "jsadd">
+   <div class = 'add'>
+   <p> 
+   <select class = "select_service" onChange="change_service(this.selectedIndex)">
+    <option value= 0 >Технические работы</option>
+    <option value= 1 >Наземные работы</option>
+   </select>
+       <select class = "service"  id = "tex">
+           {% for tex in tex_service %}
+                <option value= {{ tex.ID_SERVICE }}>{{tex.NAME_SERVICE}}</option>
+           {% endfor %}
+       </select>
+       <select class = "service" id = "earth">
+           {% for tex in earth_service %}
+                <option value= {{ tex.ID_SERVICE }}>{{tex.NAME_SERVICE}}</option>
+           {% endfor %}
+       </select>
+       <button type='button' onclick = "handler_add()" id='led_on'>Добавить</button>
+   </p>
+   </div>
+   </div>
+        <table id="myTable" align="center" class="demotable">
+        </table>
+        <table align="center" id = "remove">
+        <tr>
+            <td> Выбрана строка:</td>
+            <td><p id = "col"> </p></td>
+            <td><button type='button' onclick = "handler_remove()" id='led_on1'>Удалить</button></td>
+        </tr>
+    </table>
+</div>
+<br>
+<br>
+   <p><button type='button' onclick = "handler_send_data()" id='led_on3'>Отправить</button></p>
+    <p id = "status"></p>>
+   <!-- <button type='button' onclick = "handler_debug()" >debug</button>-->
+
+  
+  <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+  
+  <script> 
+  	var arr = [];
+    var a = -1;
+    var type = false;
+  	document.getElementById("earth").hidden = true;
+  	document.getElementById("remove").hidden = true;
+
+  	function change_service(index)
+  	{
+  	    var hide = index == 1;
+  	    document.getElementById("earth").hidden = !hide;
+  	    document.getElementById("tex").hidden = hide;
+  	    type = hide;
+  	}
+
+  	function handler_add()
+  	{
+  	    var table = document.getElementById("myTable");
+        var row = table.insertRow(0);
+        row.onclick = function()
+        {
+            set_row(this.rowIndex);
+        }
+        var cell1 = row.insertCell(0);
+        select_name = type ? "earth" : "tex";
+        var n = document.getElementById(select_name).options.selectedIndex;
+        arr.push(document.getElementById(select_name).options[n].value);
+        cell1.innerHTML = document.getElementById(select_name).options[n].text;
+        set_row(-1);
+  	}
+
+  	function handler_remove()
+  	{
+  	    if(a < 0)
+  	    {
+  	        return;
+  	    }
+  	    document.getElementById("myTable").deleteRow(a);
+  	    console.log(a);
+  	    b = arr.length - a - 1;
+  	    console.log(b);
+  	    arr.splice(b, 1);
+        set_row(-1);
+  	}
+
+    function set_row(index)
+    {
+        document.getElementById("col").innerHTML = index < 0 ? "" : index + 1;
+        document.getElementById("remove").hidden = index < 0;
+        a = index;
+    }
+
+	function handler_send_data()
+	{
+		var aircraft = document.getElementById('aircraft').value;
+		var airline = document.getElementById('airline').value;
+		let my_data = {
+			aircraft: aircraft,
+			airline: airline,
+			services: arr
+		};
+		let json = JSON.stringify(my_data);
+		$.post( '/add', {data: json},function( data, status ) {
+		    if(status == 'success')
+		    {
+                document.getElementById("status").innerHTML = 'Добавленно';
+            }else{
+                document.getElementById("status").innerHTML = 'Ошибка' ;
+            }
+        });
+	}
+
+	function handler_debug()
+	{
+        console.log(arr);
+	}
+	
+  </script>
+
+{% endblock %}

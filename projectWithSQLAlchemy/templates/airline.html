@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Просмотр чеков
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <label> С </label>
+        <input type="date" name="with" required/>
+        <label> По </label>
+        <input type="date" name="to" required/><br><p></p><br>
+        <input type="submit" name="cmd" value="Вывести"/>
+    </form>
+    {% if checks %}
+    {% endif %}
+
+    {% if count_acts  %}
+    	{% for act in count_acts %}
+    		<p> Акт № {{ act.ID_ACT }} </p>
+    		<p> Дата офорления {{ act.DATE }} </p>
+
+    		<table id="myTable" align="center" class="demotable">
+    		{% for i in range(act.COUNT) %}
+    			<tr>
+    				<td>
+    						<p> {{ data_service[data_acts[-1].ID_SERVICE] }} </p>
+    				</td>
+    				<td>
+    					<p> {{data_acts[-1].COST}}</p>
+    				</td>
+                    {% if data_acts.pop() %} 
+                    {% endif %}
+    			</tr>
+
+    		{% endfor %}
+    		</table>
+			{% if final_score|length != 0 %}
+			<p> ИТОГ: {{ final_score.pop().SCORE }}</p>>
+			{% endif %}
+    	{% endfor%}
+    {% endif %}
+{% endblock %}

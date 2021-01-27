@@ -1,0 +1,94 @@
+{# Это шаблон templates/base.html #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Домашняя страница{% endblock %}</title>
+    <style type="text/css">
+ul {
+  list-style: none; /*убираем маркеры списка*/
+  margin: 0; /*убираем отступы*/
+  padding-left: 0; /*убираем отступы*/
+  margin-top:0px; /*делаем отступ сверху*/
+  background:#4682B4; /*добавляем фон всему меню (заменив этот параметр, вы поменяете цвет всего меню)*/
+  height: 50px; /*задаем высоту*/
+}
+a {
+  text-decoration: none; /*убираем подчеркивание текста ссылок*/
+  background:#4682B4; /*добавляем фон к пункту меню (заменив этот параметр, вы поменяете цвет всех пунктов меню)*/
+  color:#fff; /*меняем цвет ссылок*/
+  padding:0px 15px; /*добавляем отступ*/
+  font-family: arial; /*меняем шрифт*/
+  line-height:50px; /*ровняем меню по вертикали*/
+  display: block; 
+  border-right: 1px solid #4682B4; /*добавляем бордюр справа*/
+  -moz-transition: all 0.3s 0.01s ease; /*делаем плавный переход*/
+  -o-transition: all 0.3s 0.01s ease;
+  -webkit-transition: all 0.3s 0.01s ease;
+}
+a:hover {
+  background:#D43737;/*добавляем эффект при наведении*/
+}
+li {
+  float:left; /*Размещаем список горизонтально для реализации меню*/
+}
+.divClass { 
+text-align: center;
+	border: 1px solid #000000;
+    background: #FFF; /* Цвет фона */
+    padding: 50px 5%; /* Поля */
+    margin: 10% 15% 5%;   
+}
+.demotable {
+  border-collapse: collapse;
+  counter-reset: schetchik;  /* счётчик с названием "schetchik" работает в рамках класса .demotable */
+}
+.demotable tr {
+  counter-increment: schetchik;  /* при встрече тега tr счётчик с названием "schetchik" увеличивается на единицу */
+}
+.demotable td,
+.demotable tr:before {
+  padding: .1em .5em;
+  border: 1px solid #E7D5C0;
+}
+.demotable tr:before {
+  content: counter(schetchik);  /* значение счётчика с названием "schetchik" записывается в первую клетку строки */
+  display: table-cell;
+  vertical-align: middle;
+  color: #978777;
+}
+	</style>
+</head>
+<body>
+
+    <nav class="two">
+  	<ul>
+  	{% if current_user and current_user.is_authenticated %}
+  		<li><a href="/">{{ current_user.username }}</a></li>
+  	{% else %}
+  		<li><a href="/"><i class="fa fa-home fa-fw"></i>Домашня станица</a></li>
+  	{% endif %}
+    	    	
+    	{% block nav %}
+    	{% endblock %}
+    	
+    	{% if current_user and current_user.is_authenticated %}
+            {% if current_user.role == 1 %}
+                <li><a href="/add">Добавить акт</a></li>
+            {% elif current_user.role == 0 %}
+                <li><a href="/check">Посмотреть чеки</a></li>
+            {% endif %}
+    		<li><a href="/logout">Выход</a></li>
+    	{% else %}
+    		<li><a href="/login">Вход</a></li>
+    	{% endif %}
+  	</ul>
+	</nav>
+    <div class = "divClass">
+    
+    {% block content %}
+        <p>Работа аэпорта </p>
+    {% endblock %}
+   </div>
+</body>
+</html>

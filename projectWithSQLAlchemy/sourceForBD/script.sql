@@ -1,0 +1,12 @@
+INSERT mydb.SERVICE (TYPE_SERVICE ) VALUES(true),(true),(false); 
+INSERT mydb.TECH_SERVICE (ID_SERVICE, NAME_SERVICE ) VALUES(1,"Проверка проводки"),(2,"Проверка навигации");
+INSERT mydb.EARTH_SERVICE (ID_SERVICE,NAME_SERVICE ) VALUES(3,"Заправка");
+INSERT mydb.USERS (LOGIN, PASSWORD, ROLE ) VALUES("disp1", "airp",true),("air", "air",false),("disp2", "airp", true);
+INSERT mydb.DISPATCHER (ID_DISPATCHER, NAME, SECOND_NAME) VALUES (1, "Vasya", "Pupkin"), (3, "Vlad", "Valacus");
+INSERT mydb.AIRLINE (ID_AIRLINE, NAME_AIRLINE) VALUES (2, "AirFlot");
+INSERT mydb.AIRCRAFT (NAME_AIRCRAFT) VALUES("boing-777"), ("an-22");
+INSERT mydb.TARIFF (ID_AIRCRAFT, COST, ID_SERVICE) VALUES(1, 20.1, 1), (1, 25.1, 2),(1, 50.1, 3), (2, 12.1, 1), (2, 18.1, 2), (2, 28.1, 3);
+INSERT mydb.LANDING_ACT (DATE, ID_DISPATCHER, ID_AIRLINE, TYPE_AIRCRAFT) VALUES(CURRENT_DATE(), 1, 2, 2), (CURRENT_DATE(), 3, 2, 1);
+INSERT mydb.LIST_SERVICE (ID_ACT, ID_SERVICE) VALUES (1, 3), (1, 2), (2, 3), (2, 1);
+INSERT mydb.SCORE (ID_ACT, SCORE) VALUES(1, 60.5), (2, 121);
+
