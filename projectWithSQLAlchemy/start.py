@@ -1,38 +1,10 @@
-from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import Session
-from sqlalchemy import create_engine
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import inspect
-from flask import Flask, request, render_template, redirect, url_for
-from flask_login import LoginManager, UserMixin, login_required, login_user, current_user, logout_user
-from flask_login import LoginManager
 from user import MyUser
-from flask import json
 import json as my_json
 from datetime import date
 from sqlalchemy.sql import func
 from sqlalchemy import and_
-
-app = Flask(__name__)
-app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://tntrol:password@localhost:3306/mydb'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['CSRF_ENABLED'] = True
-app.config['SECRET_KEY'] = 'a really really really really long secret key'
-login_manager = LoginManager(app)
-db: SQLAlchemy = SQLAlchemy(app, session_options={'autoflush': False})
-Base = automap_base()
-Base.prepare(db.engine, reflect=True)
-Users = Base.classes.USERS
-Tariff = Base.classes.TARIFF
-LandingAct = Base.classes.LANDING_ACT
-Score = Base.classes.SCORE
-Airline = Base.classes.AIRLINE
-TechService = Base.classes.TECH_SERVICE
-EarthService = Base.classes.EARTH_SERVICE
-Aircraft = Base.classes.AIRCRAFT
-ListService = Base.classes.LIST_SERVICE
+from flask_login import login_required, login_user, current_user, logout_user
+from app_config import *
 
 
 @login_manager.user_loader
@@ -67,6 +39,7 @@ def login():
     login_user(user)
     return redirect(url_for('base'))
 
+
 @app.route('/check', methods=["GET", "POST"])
 @login_required
 def generate_airline():
@@ -75,6 +48,7 @@ def generate_airline():
     data_acts = None
     count_acts = None
     final_score = None
+    dict_service = {}
     if request.method == 'POST':
         with_date = request.form['with']
         to_date = request.form['to']
@@ -82,12 +56,11 @@ def generate_airline():
         count_acts = db.session.query(func.count(ListService.ID_ACT).label('COUNT'), LandingAct.DATE, LandingAct.ID_ACT).join(LandingAct).filter(LandingAct.ID_AIRLINE == current_user.get_id()).filter(LandingAct.DATE > with_date).filter(LandingAct.DATE < to_date).group_by(ListService.ID_ACT).order_by(ListService.ID_ACT.desc()).all()
         data_tex1 = db.session.query(TechService).all()
         data_earth1 = db.session.query(EarthService).all()
-        dict_service = {}
         for t in data_tex1:
             dict_service[t.ID_SERVICE] = t.NAME_SERVICE
         for t in data_earth1:
             dict_service[t.ID_SERVICE] = t.NAME_SERVICE
-        final_score = db.session.query(Score).join(LandingAct).filter(LandingAct.ID_AIRLINE == current_user.get_id()).filter(LandingAct.DATE > with_date).filter(LandingAct.DATE < to_date).all()
+        final_score = db.session.query(Score).join(LandingAct).filter(LandingAct.ID_AIRLINE == current_user.get_id()).filter(LandingAct.DATE > with_date).filter(LandingAct.DATE < to_date).filter(Score.SCORE > 0).all()
     return render_template('airline.html', count_acts = count_acts, data_acts = data_acts, data_service = dict_service, final_score = final_score)
 
 
